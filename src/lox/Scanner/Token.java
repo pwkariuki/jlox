@@ -1,5 +1,15 @@
 package lox.Scanner;
 
+/**
+ * Represents a single comment in Lox.
+ *
+ * <p>
+ *   A token is a categorized piece of source code (e.g. a keyword,
+ *   identifier, literal, or operator). Each token contains information
+ *   about its type, the raw lexeme from the source, an optional literal value,
+ *   and the line number where it was parsed from.
+ * </p>
+ */
 public class Token {
   final TokenType type;
   final String lexeme;

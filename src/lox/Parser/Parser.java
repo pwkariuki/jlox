@@ -1,4 +1,4 @@
-package lox.parser;
+package lox.Parser;
 
 public class Parser {
 }

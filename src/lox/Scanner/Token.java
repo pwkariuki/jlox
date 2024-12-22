@@ -1,4 +1,4 @@
-package lox.scanner;
+package lox.Scanner;
 
 /**
  * Represents a single comment in Lox.

@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Scanner;
+import java.util.List;
+import lox.Scanner.Scanner;
+import lox.Scanner.Token;
 
 /**
  * Jlox Interpreter.
@@ -92,15 +94,27 @@ public class Lox {
 
   private static void run(String source) {
     Scanner scanner = new Scanner(source);
-    //    List<Token> tokens = scanner.scanTokens();
-    //
-    //    // for now, just print the tokens
-    //    for (Token token: tokens) {
-    //      System.out.println(token);
-    //    }
+    List<Token> tokens = scanner.scanTokens();
+
+    // for now, just print the tokens
+    for (Token token : tokens) {
+      System.out.println(token);
+    }
   }
 
-  static void error(int line, String message) {
+  /**
+   * Reports an error at a specific line in the source code.
+   *
+   * <p>
+   *   This method generates an error message, indicating the line where
+   *   the error occurred, and marks that an error has been encountered to
+   *   prevent code from being run.
+   * </p>
+   *
+   * @param line the line number where the error occurred
+   * @param message a description of the error
+   */
+  public static void error(int line, String message) {
     report(line, "", message);
   }
 

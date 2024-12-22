@@ -1,4 +1,4 @@
-package lox.Scanner;
+package lox.scanner;
 
 enum TokenType {
   // Single-character tokens.

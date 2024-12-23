@@ -3,6 +3,7 @@ package lox.parser;
 import static lox.scanner.TokenType.*;
 
 import java.util.List;
+import lox.Lox;
 import lox.ast.Expr;
 import lox.scanner.Token;
 import lox.scanner.TokenType;
@@ -11,6 +12,9 @@ import lox.scanner.TokenType;
  *
  */
 public class Parser {
+  // ParseError (sentinel) class to unwind the parser
+  private static class ParseError extends RuntimeException {}
+
   private final List<Token> tokens;
   private int current = 0;  // next token waiting to be parsed
 
@@ -146,5 +150,18 @@ public class Parser {
       consume(RIGHT_PAREN, "Expect ')' after expression.");
       return new Expr.Grouping(expr);
     }
+  }
+
+  private Token consume(TokenType type, String message) {
+    if (check(type)) {
+      return advance();
+    }
+
+    throw error(peek(), message);
+  }
+
+  private ParseError error(Token token, String message) {
+    Lox.error(token, message);
+    return new ParseError();
   }
 }

@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import lox.scanner.Scanner;
 import lox.scanner.Token;
+import lox.scanner.TokenType;
 
 /**
  * Jlox Interpreter.
@@ -118,8 +119,38 @@ public class Lox {
     report(line, "", message);
   }
 
+  /**
+   * Reports an error at a specific token in the source code during parsing.
+   *
+   * <p>
+   *   This method generates an error message with context about where the error
+   *   occurred in relation to a specific token. For end-of-file tokens, it indicates
+   *   the error occurred at the end of input. For other tokens, it shows the specific
+   *   lexeme where the error was found.
+   * </p>
+   *
+   * @param token the token where the error occurred
+   * @param message a description of the error
+   */
+  public static void error(Token token, String message) {
+    if (token.type == TokenType.EOF) {
+      report(token.line, " at end", message);
+    } else {
+      report(token.line, " at '" + token.lexeme + "'", message);
+    }
+  }
+
+  /**
+   * Internal helper method to format and print error messages.
+   *
+   * @param line the line number where the error occurred
+   * @param where additional context about error location
+   * @param message description of the error
+   */
   private static void report(int line, String where, String message) {
     System.err.println("[line " + line + "] Error" + where + ": " + message);
     hadError = true;
   }
+
+
 }

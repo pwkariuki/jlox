@@ -12,7 +12,7 @@ public class AstPrinter implements Expr.Visitor<String> {
    * @param expr the expression to print
    * @return the expression's string representation
    */
-  String print(Expr expr) {
+  public String print(Expr expr) {
     return expr.accept(this);
   }
 

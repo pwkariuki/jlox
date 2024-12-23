@@ -7,6 +7,10 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+
+import lox.ast.AstPrinter;
+import lox.ast.Expr;
+import lox.parser.Parser;
 import lox.scanner.Scanner;
 import lox.scanner.Token;
 import lox.scanner.TokenType;
@@ -96,11 +100,15 @@ public class Lox {
   private static void run(String source) {
     Scanner scanner = new Scanner(source);
     List<Token> tokens = scanner.scanTokens();
+    Parser parser = new Parser(tokens);
+    Expr expression = parser.parse();
 
-    // for now, just print the tokens
-    for (Token token : tokens) {
-      System.out.println(token);
+    // Stop if there was a syntax error.
+    if (hadError) {
+      return;
     }
+
+    System.out.println(new AstPrinter().print(expression));
   }
 
   /**

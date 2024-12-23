@@ -9,7 +9,12 @@ import lox.scanner.Token;
 import lox.scanner.TokenType;
 
 /**
- *
+ * <p></p>
+ *   A recursive descent parser that converts a flat list of tokens into a hierarchical
+ *   abstract syntax tree representation for the Lox language. Implements grammar rules
+ *   for expressions including arithmetic, comparisons, grouping, and literals.
+ * </p>
+ * Uses panic mode error recovery to handle syntax errors gracefully and continue parsing.
  */
 public class Parser {
   // ParseError (sentinel) class to unwind the parser
@@ -18,8 +23,26 @@ public class Parser {
   private final List<Token> tokens;
   private int current = 0;  // next token waiting to be parsed
 
-  Parser(List<Token> tokens) {
+  /**
+   * Parser constructor.
+   *
+   * @param tokens the list of tokens to parse
+   */
+  public Parser(List<Token> tokens) {
     this.tokens = tokens;
+  }
+
+  /**
+   * Parses the tokens into an expression tree.
+   *
+   * @return the parsed expression, or null if a syntax error occurred
+   */
+  public Expr parse() {
+    try {
+      return expression();
+    } catch (ParseError error) {
+      return null;
+    }
   }
 
   // expression     → equality ;
@@ -150,6 +173,8 @@ public class Parser {
       consume(RIGHT_PAREN, "Expect ')' after expression.");
       return new Expr.Grouping(expr);
     }
+
+    throw error(peek(), "Expect expression."); // token cannot start expression
   }
 
   private Token consume(TokenType type, String message) {
@@ -163,5 +188,29 @@ public class Parser {
   private ParseError error(Token token, String message) {
     Lox.error(token, message);
     return new ParseError();
+  }
+
+  private void synchronize() {
+    advance();
+
+    while (!isAtEnd()) {
+      if (previous().type == SEMICOLON) {
+        return;
+      }
+
+      switch (peek().type) {
+        case CLASS:
+        case FUN:
+        case VAR:
+        case FOR:
+        case IF:
+        case WHILE:
+        case PRINT:
+        case RETURN:
+          return;
+      }
+
+      advance();
+    }
   }
 }

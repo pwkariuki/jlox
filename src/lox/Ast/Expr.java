@@ -1,16 +1,17 @@
 package lox.Ast;
 
-import lox.Scanner.Token;
+import java.util.List;
+import lox.scanner.Token;
 
 abstract class Expr {
   interface Visitor<R> {
-    R visitExprBinary(Binary expr);
+    R visitBinaryExpr(Binary expr);
 
-    R visitExprGrouping(Grouping expr);
+    R visitGroupingExpr(Grouping expr);
 
-    R visitExprLiteral(Literal expr);
+    R visitLiteralExpr(Literal expr);
 
-    R visitExprUnary(Unary expr);
+    R visitUnaryExpr(Unary expr);
 
   }
 

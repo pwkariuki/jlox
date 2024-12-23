@@ -1,4 +1,4 @@
-package lox.Scanner;
+package lox.scanner;
 
 /**
  * Represents a single comment in Lox.
@@ -12,7 +12,7 @@ package lox.Scanner;
  */
 public class Token {
   final TokenType type;
-  final String lexeme;
+  public final String lexeme;
   final Object literal;
   final int line;
 

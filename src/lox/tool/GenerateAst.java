@@ -40,7 +40,7 @@ public class GenerateAst {
     String path = outputDir + "/" + baseName + ".java";
     PrintWriter writer = new PrintWriter(path, StandardCharsets.UTF_8);
 
-    writer.println("package lox.AST;");
+    writer.println("package lox.Ast;");
     writer.println();
     writer.println("import java.util.List;");
     writer.println("import lox.scanner.Token;");
@@ -100,7 +100,7 @@ public class GenerateAst {
 
     for (String type : types) {
       String typeName = type.split(":")[0].trim();
-      writer.println("    R visit" + baseName + typeName + "(" + typeName + " "
+      writer.println("    R visit" + typeName + baseName + "(" + typeName + " "
               + baseName.toLowerCase() + ");");
       writer.println();
     }

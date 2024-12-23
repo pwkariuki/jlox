@@ -1,12 +1,12 @@
 package lox.scanner;
 
+import static lox.scanner.TokenType.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lox.Lox;
-
-import static lox.scanner.TokenType.*;
 
 /**
  * Jlox scanner.

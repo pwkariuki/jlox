@@ -9,7 +9,7 @@ import lox.scanner.Token;
 import lox.scanner.TokenType;
 
 /**
- * <p></p>
+ * <p>
  *   A recursive descent parser that converts a flat list of tokens into a hierarchical
  *   abstract syntax tree representation for the Lox language. Implements grammar rules
  *   for expressions including arithmetic, comparisons, grouping, and literals.

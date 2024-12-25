@@ -176,4 +176,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     System.out.println(stringify(value));
     return null;
   }
+
+  @Override
+  public Void visitVarStmt(Stmt.Var stmt) {
+    return null;
+  }
 }

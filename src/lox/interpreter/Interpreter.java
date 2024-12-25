@@ -2,7 +2,10 @@ package lox.interpreter;
 
 import lox.Lox;
 import lox.ast.Expr;
+import lox.ast.Stmt;
 import lox.scanner.Token;
+
+import java.util.List;
 
 /**
  * Evaluates parsed expressions in the Lox language.
@@ -13,21 +16,26 @@ import lox.scanner.Token;
  *   type checking and error handling.
  * </p>
  */
-public class Interpreter implements Expr.Visitor<Object> {
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
   /**
    * Evaluates an expression and prints its value.
    * Handles runtime errors by reporting them through the Lox error handler.
    *
-   * @param expression The expression to evaluate
+   * @param statements The expression to evaluate
    */
-  public void interpret(Expr expression) {
+  public void interpret(List<Stmt> statements) {
     try {
-      Object value = evaluate(expression);
-      System.out.println(stringify(value));
+      for (Stmt statement : statements) {
+        execute(statement);
+      }
     } catch (RuntimeError error) {
       Lox.runtimeError(error);
     }
+  }
+
+  private void execute(Stmt stmt) {
+    stmt.accept(this);
   }
 
   private String stringify(Object object) {
@@ -154,5 +162,18 @@ public class Interpreter implements Expr.Visitor<Object> {
       return;
     }
     throw new RuntimeError(operator, "Operands must be numbers.");
+  }
+
+  @Override
+  public Void visitExpressionStmt(Stmt.Expression stmt) {
+    evaluate(stmt.expression);
+    return null;
+  }
+
+  @Override
+  public Void visitPrintStmt(Stmt.Print stmt) {
+    Object value = evaluate(stmt.expression);
+    System.out.println(stringify(value));
+    return null;
   }
 }

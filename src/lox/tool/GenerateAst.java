@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * A utility class to generate abstract syntax tree (AST) classes for the Lox interpreter.
+ *
  * <p>
  *   Generates Java source file representing the AST for expressions.
  *   Each expression is implemented as a derived class of the Expr abstract class.
@@ -33,6 +34,10 @@ public class GenerateAst {
         "Literal  : Object value",
         "Unary    : Token operator, Expr right"
     ));
+    defineAst(outputDir, "Stmt", Arrays.asList(
+        "Expression : Expr expression",
+        "Print      : Expr expression"
+    ));
   }
 
   private static void defineAst(String outputDir, String baseName, List<String> types)
@@ -40,12 +45,11 @@ public class GenerateAst {
     String path = outputDir + "/" + baseName + ".java";
     PrintWriter writer = new PrintWriter(path, StandardCharsets.UTF_8);
 
-    writer.println("package lox.Ast;");
+    writer.println("package lox.ast;");
     writer.println();
-    writer.println("import java.util.List;");
     writer.println("import lox.scanner.Token;");
     writer.println();
-    writer.println("abstract class " + baseName + " {");
+    writer.println("public abstract class " + baseName + " {");
 
     defineVisitor(writer, baseName, types);
 
@@ -57,17 +61,17 @@ public class GenerateAst {
     }
     // The base accept() method.
     writer.println();
-    writer.println("  abstract <R> R accept(Visitor<R> visitor);");
+    writer.println("  public abstract <R> R accept(Visitor<R> visitor);");
     writer.println("}");
     writer.close();
   }
 
   private static void defineTypes(PrintWriter writer, String baseName,
                                   String className, String fieldList) {
-    writer.println("  static class " + className + " extends " + baseName + " {");
+    writer.println("  public static class " + className + " extends " + baseName + " {");
 
     // Constructor.
-    writer.println("    " + className + "(" + fieldList + ") {");
+    writer.println("    public " + className + "(" + fieldList + ") {");
 
     // Store parameters in fields.
     String[] fields = fieldList.split(", ");
@@ -81,14 +85,14 @@ public class GenerateAst {
     // Visitor pattern.
     writer.println();
     writer.println("    @Override");
-    writer.println("    <R> R accept(Visitor<R> visitor) {");
+    writer.println("    public <R> R accept(Visitor<R> visitor) {");
     writer.println("      return visitor.visit" + className + baseName + "(this);");
     writer.println("    }");
 
     // Fields.
     writer.println();
     for (String field : fields) {
-      writer.println("    final " + field + ";");
+      writer.println("    public final " + field + ";");
     }
 
     writer.println("  }");
@@ -96,7 +100,7 @@ public class GenerateAst {
   }
 
   private static void defineVisitor(PrintWriter writer, String baseName, List<String> types) {
-    writer.println("  interface Visitor<R> {");
+    writer.println("  public interface Visitor<R> {");
 
     for (String type : types) {
       String typeName = type.split(":")[0].trim();

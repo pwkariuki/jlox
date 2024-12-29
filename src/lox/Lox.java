@@ -7,7 +7,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import lox.ast.Expr;
 import lox.ast.Stmt;
 import lox.interpreter.Interpreter;
 import lox.interpreter.RuntimeError;
@@ -166,6 +165,11 @@ public class Lox {
     hadError = true;
   }
 
+  /**
+   * Reports a runtime error that occurs during the execution of the program.
+   *
+   * @param error the {@link RuntimeError} object containing details about the runtime error
+   */
   public static void runtimeError(RuntimeError error) {
     System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
     hadRuntimeError = true;

@@ -29,6 +29,7 @@ public class GenerateAst {
     String outputDir = args[0];
     // description of each class type and its fields
     defineAst(outputDir, "Expr", Arrays.asList(
+        "Assign   : Token name, Expr value",
         "Binary   : Expr left, Token operator, Expr right",
         "Grouping : Expr expression",
         "Literal  : Object value",

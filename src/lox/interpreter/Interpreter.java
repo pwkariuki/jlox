@@ -1,11 +1,10 @@
 package lox.interpreter;
 
+import java.util.List;
 import lox.Lox;
 import lox.ast.Expr;
 import lox.ast.Stmt;
 import lox.scanner.Token;
-
-import java.util.List;
 
 /**
  * Evaluates parsed expressions in the Lox language.
@@ -53,6 +52,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
       return text;
     }
     return object.toString();
+  }
+
+  @Override
+  public Object visitAssignExpr(Expr.Assign expr) {
+    Object value = evaluate(expr.value);
+    environment.assign(expr.name, value);
+    return value;
   }
 
   @Override

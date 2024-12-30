@@ -37,6 +37,7 @@ public class GenerateAst {
         "Variable : Token name"
     ));
     defineAst(outputDir, "Stmt", Arrays.asList(
+        "Block      : List<Stmt> statements",
         "Expression : Expr expression",
         "Print      : Expr expression",
         "Var        : Token name, Expr initializer"
@@ -50,6 +51,7 @@ public class GenerateAst {
 
     writer.println("package lox.ast;");
     writer.println();
+    writer.println("import java.util.List;");
     writer.println("import lox.scanner.Token;");
     writer.println();
     writer.println("public abstract class " + baseName + " {");

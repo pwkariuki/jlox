@@ -5,6 +5,7 @@ import lox.Lox;
 import lox.ast.Expr;
 import lox.ast.Stmt;
 import lox.scanner.Token;
+import lox.scanner.TokenType;
 
 /**
  * Evaluates parsed expressions in the Lox language.
@@ -130,6 +131,22 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Object visitLiteralExpr(Expr.Literal expr) {
     return expr.value;
+  }
+
+  @Override
+  public Object visitLogicalExpr(Expr.Logical expr) {
+    Object left = evaluate(expr.left);
+
+    if (expr.operator.type == TokenType.OR) {
+      if (isTruthy(left)) { // Short circuit if left is true.
+        return left;
+      }
+    } else { // AND case.
+      if (!isTruthy(left)) { // Short circuit if left is false.
+        return left;
+      }
+    }
+    return evaluate(expr.right);
   }
 
   @Override

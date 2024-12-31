@@ -102,6 +102,11 @@ public class Lox {
     }
   }
 
+  /**
+   * Executes a string of Lox source code.
+   *
+   * @param source the Lox source code to execute
+   */
   private static void run(String source) {
     Scanner scanner = new Scanner(source);
     List<Token> tokens = scanner.scanTokens();

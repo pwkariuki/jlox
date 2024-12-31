@@ -3,6 +3,7 @@ package lox.parser;
 import static lox.scanner.TokenType.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lox.Lox;
 import lox.ast.Expr;
@@ -70,8 +71,11 @@ public class Parser {
     return new Stmt.Var(name, initializer);
   }
 
-  // statement      → exprStmt | ifStmt | printStmt | whileStmt | block ;
+  // statement      → exprStmt | forStmt | ifStmt | printStmt | whileStmt | block ;
   private Stmt statement() {
+    if (match(FOR)) {
+      return forStatement();
+    }
     if (match(IF)) {
       return ifStatement();
     }
@@ -86,6 +90,59 @@ public class Parser {
     }
 
     return expressionStatement();
+  }
+
+  // forStmt        → "for" "(" ( varDecl | exprStmt | ";" )
+  //                 expression? ";"
+  //                 expression? ")" statement ;
+  private Stmt forStatement() {
+    consume(LEFT_PAREN, "Expect '(' after 'for'.");
+
+    Stmt initializer;
+    if (match(SEMICOLON)) {
+      initializer = null;
+    } else if (match(VAR)) {
+      initializer = varDeclaration();
+    } else {
+      initializer = expressionStatement();
+    }
+
+    Expr condition = null;
+    if (!check(SEMICOLON)) {
+      condition = expression();
+    }
+    consume(SEMICOLON, "Expect ';' after loop condition.");
+
+    Expr increment = null;
+    if (!check(RIGHT_PAREN)) {
+      increment = expression();
+    }
+    consume(RIGHT_PAREN, "Expect ')' after for clauses.");
+
+    Stmt body = statement();
+
+    // Wrap increment with body.
+    if (increment != null) {
+      body = new Stmt.Block(
+          Arrays.asList(
+              body,
+              new Stmt.Expression(increment)
+          )
+      );
+    }
+
+    // Create while loop.
+    if (condition == null) {
+      condition = new Expr.Literal(true); // for (;;) becomes while (true)
+    }
+    body = new Stmt.While(condition, body);
+
+    // Add initializer.
+    if (initializer != null) {
+      body = new Stmt.Block(Arrays.asList(initializer, body));
+    }
+
+    return body;
   }
 
   // ifStmt         → "if" "(" expression ")" statement ( "else" statement )? ;

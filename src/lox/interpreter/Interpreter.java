@@ -18,8 +18,27 @@ import lox.scanner.TokenType;
  * </p>
  */
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+  final Environment globals = new Environment(); // Fixed reference to the outermost environment.
+  private Environment environment = globals;
 
-  private Environment environment = new Environment();
+  Interpreter() {
+    globals.define("clock", new LoxCallable() {
+      @Override
+      public int arity() {
+        return 0;
+      }
+
+      @Override
+      public Object call(Interpreter interpreter, List<Object> arguments) {
+        return (double) System.currentTimeMillis() / 1000.0;
+      }
+
+      @Override
+      public String toString() {
+        return "<native fn>";
+      }
+    });
+  }
 
   /**
    * Evaluates an expression and prints its value.

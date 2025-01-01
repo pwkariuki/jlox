@@ -21,7 +21,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   final Environment globals = new Environment(); // Fixed reference to the outermost environment.
   private Environment environment = globals;
 
-  Interpreter() {
+  public Interpreter() {
     globals.define("clock", new LoxCallable() {
       @Override
       public int arity() {
@@ -252,6 +252,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Void visitExpressionStmt(Stmt.Expression stmt) {
     evaluate(stmt.expression);
+    return null;
+  }
+
+  @Override
+  public Void visitFunctionStmt(Stmt.Function stmt) {
     return null;
   }
 

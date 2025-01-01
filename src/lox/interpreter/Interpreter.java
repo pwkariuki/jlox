@@ -138,16 +138,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
       arguments.add(evaluate(argument));
     }
 
-    if (!(callee instanceof LoxCallable)) {
+    if (!(callee instanceof LoxCallable function)) { // Pattern variable.
       throw new RuntimeError(expr.paren, "Can only call functions and classes.");
     }
 
-    LoxCallable function = (LoxCallable) callee;
     if (arguments.size() != function.arity()) {
       throw new RuntimeError(expr.paren,
   "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
     }
-    return new function.call(this, arguments);
+    return function.call(this, arguments);
   }
 
   private boolean isEqual(Object a, Object b) {
@@ -257,6 +256,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
   @Override
   public Void visitFunctionStmt(Stmt.Function stmt) {
+    LoxFunction function = new LoxFunction(stmt);
+    environment.define(stmt.name.lexeme, function);
     return null;
   }
 

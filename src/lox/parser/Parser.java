@@ -99,7 +99,13 @@ public class Parser {
     return new Stmt.Var(name, initializer);
   }
 
-  // statement      → exprStmt | forStmt | ifStmt | printStmt | whileStmt | block ;
+  // statement      → exprStmt
+  //               | forStmt
+  //               | ifStmt
+  //               | printStmt
+  //               | returnStmt
+  //               | whileStmt
+  //               | block ;
   private Stmt statement() {
     if (match(FOR)) {
       return forStatement();
@@ -109,6 +115,9 @@ public class Parser {
     }
     if (match(PRINT)) {
       return printStatement();
+    }
+    if (match(RETURN)) {
+      return returnStatement();
     }
     if (match(WHILE)) {
       return whileStatement();
@@ -201,6 +210,17 @@ public class Parser {
     Stmt body = statement();
 
     return new Stmt.While(condition, body);
+  }
+
+  // returnStmt     → "return" expression? ";" ;
+  private Stmt returnStatement() {
+    Token keyword = previous();
+    Expr value = null;
+    if (!check(SEMICOLON)) {
+      value = expression();
+    }
+    consume(SEMICOLON, "Expect ';' after return value.");
+    return new Stmt.Return(keyword, value);
   }
 
   // block          → "{" declaration* "}" ;

@@ -144,7 +144,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     if (arguments.size() != function.arity()) {
       throw new RuntimeError(expr.paren,
-  "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
+        "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
     }
     return function.call(this, arguments);
   }
@@ -276,6 +276,17 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     Object value = evaluate(stmt.expression);
     System.out.println(stringify(value));
     return null;
+  }
+
+  // Use an exception to unwind the interpreter back to the call.
+  @Override
+  public Void visitReturnStmt(Stmt.Return stmt) {
+    Object value = null;
+    if (stmt.value != null) {
+      value = evaluate(stmt.value);
+    }
+
+    throw new Return(value);
   }
 
   @Override

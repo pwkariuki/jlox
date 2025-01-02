@@ -123,6 +123,11 @@ public class Lox {
     Resolver resolver = new Resolver(interpreter);
     resolver.resolve(statements);
 
+    // Stop if there was a resolution error.
+    if (hadError) {
+      return;
+    }
+
     interpreter.interpret(statements);
   }
 

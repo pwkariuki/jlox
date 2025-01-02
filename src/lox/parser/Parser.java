@@ -48,11 +48,15 @@ public class Parser {
     return statements;
   }
 
-  // declaration    → funDecl
+  // declaration    → classDecl
+  //               | funDecl
   //               | varDecl
   //               | statement ;
   private Stmt declaration() {
     try {
+      if (match(CLASS)) {
+        return classDeclaration();
+      }
       if (match(FUN)) {
         return function("function");
       }
@@ -66,8 +70,25 @@ public class Parser {
     }
   }
 
+  // classDecl      → "class" IDENTIFIER "{" function* "}" ;
+  private Stmt classDeclaration() {
+    Token name = consume(IDENTIFIER, "Expect class name.");
+    consume(LEFT_BRACE, "Expect '{' before class body.");
+
+    List<Stmt.Function> methods = new ArrayList<>();
+    while (!check(RIGHT_BRACE) && !isAtEnd()) {
+      methods.add(function("method"));
+    }
+
+    consume(RIGHT_BRACE, "Expect '}' after class body.");
+
+    return new Stmt.Class(name, methods);
+  }
+
+
   // funDecl        → "fun" function ;
   // function       → IDENTIFIER "(" parameters? ")" block ;
+  // parameters     → IDENTIFIER ( "," IDENTIFIER )* ;
   private Stmt.Function function(String kind) {
     Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
     consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");

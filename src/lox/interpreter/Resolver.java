@@ -13,7 +13,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   private final Interpreter interpreter;
   private final Stack<Map<String, Boolean>> scopes;
 
-  Resolver(Interpreter interpreter) {
+  public Resolver(Interpreter interpreter) {
     this.interpreter = interpreter;
     scopes = new Stack<>();
   }
@@ -104,7 +104,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     scopes.pop();
   }
 
-  void resolve(List<Stmt> statements) {
+  public void resolve(List<Stmt> statements) {
     for (Stmt statement : statements) {
       resolve(statement);
     }

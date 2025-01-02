@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import lox.ast.Stmt;
 import lox.interpreter.Interpreter;
+import lox.interpreter.Resolver;
 import lox.interpreter.RuntimeError;
 import lox.parser.Parser;
 import lox.scanner.Scanner;
@@ -117,6 +118,10 @@ public class Lox {
     if (hadError) {
       return;
     }
+
+    // Run the resolver.
+    Resolver resolver = new Resolver(interpreter);
+    resolver.resolve(statements);
 
     interpreter.interpret(statements);
   }

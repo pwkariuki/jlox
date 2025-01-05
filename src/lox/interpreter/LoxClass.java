@@ -5,17 +5,25 @@ import java.util.Map;
 
 public class LoxClass implements LoxCallable {
   final String name;
+  final LoxClass superclass;
   private final Map<String, LoxFunction> methods;
 
-  LoxClass(String name, Map<String, LoxFunction> methods) {
+  LoxClass(String name, LoxClass superclass, Map<String, LoxFunction> methods) {
     this.name = name;
     this.methods = methods;
+    this.superclass = superclass;
   }
 
   public LoxFunction findMethod(String name) {
     if (methods.containsKey(name)) {
       return methods.get(name);
     }
+
+    // Reuse method from superclass.
+    if (superclass != null) {
+      return superclass.findMethod(name);
+    }
+
     return null;
   }
 

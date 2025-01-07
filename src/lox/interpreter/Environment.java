@@ -11,7 +11,7 @@ import lox.scanner.Token;
  * lookup, and assignment.
  */
 public class Environment {
-  private final Environment enclosing; // reference to its enclosing scope
+  final Environment enclosing; // reference to its enclosing scope
   private final Map<String, Object> values = new HashMap<>();
 
   /**

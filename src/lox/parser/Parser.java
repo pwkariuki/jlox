@@ -40,6 +40,7 @@ public class Parser {
    *
    * @return the parsed expression, or null if a syntax error occurred
    */
+  // program    → declaration* EOF ;
   public List<Stmt> parse() {
     List<Stmt> statements = new ArrayList<>();
     while (!isAtEnd()) {
@@ -118,6 +119,7 @@ public class Parser {
     return new Stmt.Function(name, parameters, body);
   }
 
+  // varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
   private Stmt varDeclaration() {
     Token name = consume(IDENTIFIER, "Expect variable name.");
 
@@ -226,6 +228,7 @@ public class Parser {
     return new Stmt.If(condition, thenBranch, elseBranch);
   }
 
+  // printStmt      → "print" expression ";" ;
   private Stmt printStatement() {
     Expr value = expression();
     consume(SEMICOLON, "Expect ';' after value.");
@@ -265,6 +268,7 @@ public class Parser {
     return statements;
   }
 
+  // exprStmt       → expression ";" ;
   private Stmt expressionStatement() {
     Expr expr = expression();
     consume(SEMICOLON, "Expect ';' after expression.");
@@ -288,8 +292,7 @@ public class Parser {
       if (expr instanceof Expr.Variable) {
         Token name = ((Expr.Variable) expr).name;
         return new Expr.Assign(name, value);
-      } else if (expr instanceof Expr.Get) {
-        Expr.Get get = (Expr.Get) expr;
+      } else if (expr instanceof Expr.Get get) {
         return new Expr.Set(get.object, get.name, value);
       }
       error(equals, "Invalid assignment target.");

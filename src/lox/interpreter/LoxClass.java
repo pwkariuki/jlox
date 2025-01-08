@@ -3,6 +3,17 @@ package lox.interpreter;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents a class in the Lox language. A class is a callable object that creates
+ * instances when called, and maintains a collection of methods that can be inherited
+ * through a superclass chain.
+ *
+ * <p>
+ *   When called as a function, a LoxClass creates a new instance and invokes its
+ *   initializer ("init" method) if it exists. The class also provides method lookup
+ *   functionality that supports inheritance by searching the superclass chain.
+ * </p>
+ */
 public class LoxClass implements LoxCallable {
   final String name;
   final LoxClass superclass;
@@ -14,6 +25,18 @@ public class LoxClass implements LoxCallable {
     this.superclass = superclass;
   }
 
+  /**
+   * Looks up a method by name in this class or its superclass chain.
+   *
+   * <p>
+   *   The search starts in the current class's method map. If the method
+   *   is not found and a superclass exists, the search continues up the
+   *   inheritance chain.
+   * </p>
+   *
+   * @param name the name of the method to find
+   * @return the method if found, null otherwise
+   */
   public LoxFunction findMethod(String name) {
     if (methods.containsKey(name)) {
       return methods.get(name);

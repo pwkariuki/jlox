@@ -9,7 +9,7 @@ import java.util.Map;
 import lox.Lox;
 
 /**
- * Jlox scanner.
+ * Lox scanner.
  * The scanner takes in raw source code as a series of characters
  * and groups it into a series of chunks (tokens).
  */

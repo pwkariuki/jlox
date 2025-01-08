@@ -26,6 +26,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   // Side table to store resolution information.
   private final Map<Expr, Integer> locals = new HashMap<>();
 
+  /**
+   * Creates a new Lox interpreter and initializes the global environment with native functions.
+   * <ul>
+   *   <li>{@code clock()} - Returns the current time in seconds.</li>
+   * </ul>
+   *
+   */
   public Interpreter() {
     globals.define("clock", new LoxCallable() {
       @Override

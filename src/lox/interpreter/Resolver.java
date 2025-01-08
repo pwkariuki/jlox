@@ -9,6 +9,24 @@ import lox.ast.Expr;
 import lox.ast.Stmt;
 import lox.scanner.Token;
 
+/**
+ * Performs static analysis on Lox source code to resolve variable bindings.
+ * This resolver does a single pass over the AST before interpretation to determine
+ * the scope depth of each variable reference. It also performs several static checks
+ * like detecting invalid 'return' statements and invalid 'this'/'super' usage.
+ *
+ * <p>
+ *   The resolver maintains a stack of scopes where each scope is a map from variable
+ *   names to a boolean indicating whether the variable has been fully defined. This helps
+ *   catch references to variables in their own initializers.
+ * </p>
+ *
+ * <p>
+ *   After resolution, the interpreter can use the resolved scope depths to look up
+ *   variables directly in their enclosing environments without doing a dynamic scope chain
+ *   traversal.
+ * </p>
+ */
 public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   private final Interpreter interpreter;
   private final Stack<Map<String, Boolean>> scopes;
@@ -200,6 +218,11 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     scopes.pop();
   }
 
+  /**
+   * Resolves variable bindings for a list of statements.
+   *
+   * @param statements the list of statements to resolve
+   * */
   public void resolve(List<Stmt> statements) {
     for (Stmt statement : statements) {
       resolve(statement);

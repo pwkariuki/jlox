@@ -10,8 +10,9 @@ import java.util.List;
  * A utility class to generate abstract syntax tree (AST) classes for the Lox interpreter.
  *
  * <p>
- *   Generates Java source file representing the AST for expressions.
- *   Each expression is implemented as a derived class of the Expr abstract class.
+ *   Generates Java source files representing the AST.
+ *   Each expression is implemented as a derived class of the Expr abstract class, and
+ *   each statement is implemented as a derived class of the Stmt abstract class.
  * </p>
  */
 public class GenerateAst {
